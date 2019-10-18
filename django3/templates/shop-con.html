@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+		<ul class="breadnav clearfix">
+			<li class="bnav-item"><a href="/index/">首页</a></li>
+			<li class="bnav-item">&lt;</li>
+			<li class="bnav-item"><a href="/shop/">店面展示</a></li>
+			<li class="bnav-item">&lt;</li>
+			<li class="bnav-item"><a href="javascript:;">北京店</a></li>
+		</ul>
+		
+		<div class="shop-conwrap">
+			<h1 class="shop-contit">{{ shop_info.name }}</h1>
+			<span class="shop-conpic">
+				<img src="/static/img/shop-pic7.jpg"/>
+			</span>
+			<p class="shop-font14"><span class="shop-font18">特色菜品：</span>{{ shop_food.name }}</p>
+			<p class="shop-font14"><span class="shop-font18">营业时间：</span>{{ shop_info.open_time }}</p>
+			<p class="shop-font14"><span class="shop-font18">停车泊位：</span>{{ shop_info.stop_car }}</p>
+			<p class="shop-font14"><span class="shop-font18">餐厅地址：</span>{{ shop_info.address }}</p>
+			<p class="shop-font14"><span class="shop-font18">餐厅标签：</span>{{ shop_info.label }}</p>
+			
+			<a href="/shop/" class="shop-icon">返回列表页</a>
+		</div>
+{% endblock %}

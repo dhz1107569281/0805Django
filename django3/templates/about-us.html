@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+		<ul class="breadnav clearfix">
+			<li class="bnav-item"><a href="index.html">首页</a></li>
+			<li class="bnav-item">&lt;</li>
+			<li class="bnav-item"><a href="about-us.html">关于我们</a></li>
+		</ul>
+		
+		<div class="about-wrap">
+        {% for company in company_list %}
+			<dl class="about-dl clearfix">
+				<dt class="about-pic">
+					<img src="/static/img/about-pic1.jpg"/>
+				</dt>
+				<dd class="about-txt">
+					<h3 class="about-h">{{ company.name }}</h3>
+					<p class="about-p">电话：{{ company.phone }}</p>
+					<p class="about-p">传真：{{ company.fax }}</p>
+					<p class="about-p">邮编：{{ company.post_code }}</p>
+					<p class="about-p">地址：{{ company.address }}</p>
+				</dd>
+			</dl>
+        {% endfor %}
+			<p class="about-p2">全国加盟热线及邮箱</p>
+            <p class="about-p2">9510 5396</p>
+			<p class="about-p2">E-mail:jiameng@diocoffee.com</p>
+		</div>
+{% endblock %}

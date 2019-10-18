@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="newslist-wrap">
+			<p class="newslist-tit">新闻资讯</p>
+            {% for new in new_list %}
+			<dl class="newslist-box clearfix">
+				<dt class="newslist-pic">
+					<img src="/static/img/news-pic1.jpg"/>
+				</dt>
+				<dd class="newslist-txt">
+					<a href="/news_con/{{ new.id }}" class="newslist-font24">{{ new.title }}</a>
+					<ul class="newslist-ul">
+						<li class="newslist-li">
+							<p class="newslist-time">{{ new.time }}</p>
+						</li>
+						<li class="newslist-li">
+							<a href="/news_con/{{ new.id }}" class="newslist-con">{{ new.content }}</a>
+						</li>
+						<li class="newslist-li"><a class="newslist-link" href="/news_con/{{ new.id }}">&lt;阅读全文&gt;</a></li>
+					</ul>
+				</dd>
+			</dl>
+			<span class="news-line">
+				<img src="/static/img/news-line.png"/>
+			</span>
+			{% endfor %}
+			<ul class="shop-paging clearfix">
+				<li><a href="javascript:;" class="pag-item">&lt;</a></li>
+				<li><a href="news.html" class="pag-item pag-active">1</a></li>
+				<li><a href="javascript:;" class="pag-item">2</a></li>
+				<li><a href="javascript:;" class="pag-item">3</a></li>
+				<li><a href="javascript:;" class="pag-item">4</a></li>
+				<li><a href="javascript:;" class="pag-item">&gt;</a></li>
+			</ul>
+		</div>
+{% endblock %}
+
