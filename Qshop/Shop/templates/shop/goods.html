@@ -1,0 +1,55 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}
+商品详情
+{% endblock %}
+
+{% block pro %}
+商品详情
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+
+        <tr>
+            <th rowspan="4">
+                <img src="/static/shop/img/{{ goods_data.picture }}" style="width: 200px; height: 200px">
+            </th>
+            <th>商品名称</th>
+            <td>{{ goods_data.name }}</td>
+            <th>商品价格</th>
+            <td>{{ goods_data.price }}</td>
+        </tr>
+
+        <tr>
+            <th>商品数量</th>
+            <td>{{ goods_data.number }}</td>
+            <th>出厂日期</th>
+            <td>{{ goods_data.production }}</td>
+        </tr>
+
+        <tr>
+            <th>保质期</th>
+            <td>{{ goods_data.safe_date }}</td>
+            <th>状态</th>
+            <td>
+                {% if goods_data.statue %}
+                已上架
+                {% else %}
+                已下架
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th>商品描述</th>
+            <td>{{ goods_data.description|safe }}</td>
+        </tr>
+        <tr>
+            <td><a class="btn btn-danger btn-block" href="/Shop/Add_Update/{{ goods_data.id }}/?type=2">修改该商品</a></td>
+        </tr>
+
+    </table>
+
+{% endblock %}

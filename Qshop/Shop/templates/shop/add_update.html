@@ -1,0 +1,43 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}
+商品信息添加及修改
+{% endblock %}
+
+{% block pro %}
+    {% ifequal html_type '1' %}
+        添加商品
+    {% endifequal %}
+    {% ifequal html_type '2' %}
+        修改商品
+    {% endifequal %}
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    <p><input class="form-control form-control-user" type="text" name="name" placeholder="商品名称" value="{{ goods.name }}"></p>
+    <p><input class="form-control form-control-user" type="number" name="price" placeholder="商品价格" value="{{ goods.price }}"></p>
+    <p><input class="form-control form-control-user" type="number" name="number" placeholder="商品数量" value="{{ goods.number }}"></p>
+    <p><input class="form-control form-control-user" type="text" name="production" placeholder="生产日期" value="{{ goods.production }}"></p>
+    <p><input class="form-control form-control-user" type="text" name="safe_date" placeholder="保质期" value="{{ goods.safe_date }}"></p>
+    <p><textarea class="form-control form-control-user" id="description" name="description">{{ goods.description }}</textarea></p>
+
+    <p><input class="form-control form-control-user" type="file" name="picture" placeholder="商品图片"></p>
+    {% ifequal html_type '1' %}
+        <p><input class="btn btn-danger btn-block" type="submit" value="添加商品"></p>
+    {% endifequal %}
+    {% ifequal html_type '2' %}
+        <p><input class="btn btn-danger btn-block" type="submit" value="修改商品"></p>
+    {% endifequal %}
+</form>
+{% endblock %}
+
+{% block script %}
+    <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+    <script>
+
+        CKEDITOR.replace('description',{uiColor:"#ffe838"})
+
+    </script>
+{% endblock %}
