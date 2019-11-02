@@ -25,4 +25,12 @@ class Migration(migrations.Migration):
                 ('description', ckeditor.fields.RichTextField()),
             ],
         ),
+        migrations.AddField(
+            model_name='goods',
+            name='statue',
+            field=models.IntegerField(default=1),
+            preserve_default=False,
+        ),
+
     ]
+

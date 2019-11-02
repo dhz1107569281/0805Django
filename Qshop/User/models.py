@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 
 class User(models.Model):
     email=models.EmailField()
@@ -13,3 +13,4 @@ class User(models.Model):
     address=models.TextField(blank=True,null=True)
     picture=models.ImageField(upload_to='')
 
+    identity = models.IntegerField(default=0) #0 买家 1卖家 2平台

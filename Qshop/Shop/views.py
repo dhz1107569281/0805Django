@@ -50,13 +50,18 @@ def valid_login(fun):
         cookie_email=request.COOKIES.get("email")
         session_email=request.session.get("email")
         if cookie_email and session_email and session_email==cookie_email:
-            return fun(request,*args,**kwargs)
+            user=User.objects.get(email=cookie_email)
+            identity=user.identity
+            if identity>=1:
+                return fun(request,*args,**kwargs)
+            return HttpResponseRedirect("/Buyer/index")
         else:
             return HttpResponseRedirect('/Shop/login/')
     return inner
 
 @valid_login
 def index(request):
+    useremail=request.COOKIES.get("email")
     return render(request,'shop/index.html',locals())
 
 def forgetpassword(request):
@@ -194,7 +199,9 @@ def add_goods(request):
     return render(request,'shop/add_goods.html',locals())
 
 def list_goods(request):
-    good_list=Goods.objects.all()
+    email=request.COOKIES.get("email")
+    user=User.objects.get(email=email)
+    good_list=Goods.objects.filter(goods_store=user.id)
     return render(request, 'shop/list_goods.html', locals())
 
 def set_statue(request,id):
@@ -238,83 +245,106 @@ def update_goods(request,id):
 
 def Add_Update(request,id):
     html_type=request.GET.get("type")
-
+    goods_type_list=GoodsType.objects.all()
     if id:
         goods=Goods.objects.get(id=id)
-
-        if request.method == "POST":
-            arg = request.POST
-            name = arg.get('name')
-            price = arg.get('price')
-            number = arg.get('number')
-            production = arg.get('production')
-            safe_date = arg.get('safe_date')
-            description = arg.get('description')
-            picture = request.FILES.get('picture')
-
-            goods.name = name
-            goods.price = price
-            goods.number = number
-            goods.production = production
-            goods.safe_date = safe_date
-            goods.description = description
-            goods.picture = picture
-            goods.statue = 1
-            goods.save()
-            return HttpResponseRedirect('/Shop/list_goods/')
     else:
-        if request.method == "POST":
-            arg = request.POST
-            name = arg.get('name')
-            price = arg.get('price')
-            number = arg.get('number')
-            production = arg.get('production')
-            safe_date = arg.get('safe_date')
-            description = arg.get('description')
-            picture = request.FILES.get('picture')
+        goods=Goods()
 
-            goods = Goods()
+    if request.method == "POST":
+        arg = request.POST
+        name = arg.get('name')
+        price = arg.get('price')
+        number = arg.get('number')
+        production = arg.get('production')
+        safe_date = arg.get('safe_date')
+        goods_type=arg.get("goods_type")
+        description = arg.get('description')
+        picture = request.FILES.get('picture')
 
-            goods.name = name
-            goods.price = price
-            goods.number = number
-            goods.production = production
-            goods.safe_date = safe_date
-            goods.description = description
+        goods.name = name
+        goods.price = price
+        goods.number = number
+        goods.production = production.replace('年','-').replace('月','-').replace('日','')
+        goods.safe_date = safe_date
+        goods.description = description
+
+        goods.goods_type = GoodsType.objects.get(id=int(goods_type))
+        store_id=request.COOKIES.get("email")
+        goods.goods_store=User.objects.get(email=store_id)
+        if picture:
             goods.picture = picture
-            goods.statue = 1
-            goods.save()
-            return HttpResponseRedirect('/Shop/list_goods/')
-
-
-        # if html_type=='1':
-        #     goods=Goods()
-        #
-        #     goods.name = name
-        #     goods.price = price
-        #     goods.number = number
-        #     goods.production = production
-        #     goods.safe_date = safe_date
-        #     goods.description = description
-        #     goods.picture = picture
-        #     goods.statue = 1
-        #     goods.save()
-        #     return HttpResponseRedirect('/Shop/list_goods/')
-        # elif html_type == '2':
-        #     goods=Goods.objects.get(id=id)
-        #
-        #     goods.name = name
-        #     goods.price = price
-        #     goods.number = number
-        #     goods.production = production
-        #     goods.safe_date = safe_date
-        #     goods.description = description
-        #     goods.picture = picture
-        #     goods.statue = 1
-        #     goods.save()
-        #     return HttpResponseRedirect('/Shop/list_goods/')
+        goods.statue = 1
+        goods.save()
+        return HttpResponseRedirect('/Shop/goods/%s/'%goods.id)
 
     return render(request,'shop/Add_Update.html',locals())
+
+from django.views import View
+from django.http import JsonResponse
+from django.core.paginator import Paginator
+from Qshop.settings import PAZE_SIZE
+class GoodsView(View):
+    def get(self,request):
+        result={
+            "version":'v1',
+            "code":'200',
+            "data":[],
+            "page_range":[],
+            "referer":'',
+        }
+        id=request.GET.get('id')
+        if id:
+            goods_data=Goods.objects.get(id=int(id))
+            result['data'].append(
+                {
+                    "id":goods_data.id,
+                    "name":goods_data.name,
+                    "price":goods_data.price,
+                    "number":goods_data.number,
+                    "production":goods_data.production,
+                    "safe_date":goods_data.safe_date,
+                    "picture":goods_data.picture.url,
+                    "description":goods_data.description,
+                    "statue":goods_data.statue,
+                }
+            )
+        else:
+            page_number=request.GET.get('page',1)
+            keywords=request.GET.get("keywords")
+            all_goods=Goods.objects.all()
+            if keywords:
+                all_goods=Goods.objects.filter(name__contains=keywords)
+                result["referer"]="&keywords=%s"%keywords
+            paginator=Paginator(all_goods,PAZE_SIZE)
+            page_data=paginator.page(page_number)
+            result["page_range"]=list(paginator.page_range)
+            goods_data=[
+                {
+                    "id":g.id,
+                    "name":g.name,
+                    "price":g.price,
+                    "number":g.number,
+                    "production":g.production,
+                    "safe_date":g.safe_date,
+                    "picture":g.picture.url,
+                    "description":g.description,
+                    "statue":g.statue} for g in Goods.objects.all()
+            ]
+            result['data']=goods_data
+        return JsonResponse(result)
+
+def vue_list_goods(request):
+    return render(request,'shop/vue_list_goods.html',locals())
+
+
+
+
+
+
+
+
+
 
 
 

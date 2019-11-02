@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'djcelery',
     'ckeditor',
     'ckeditor_uploader',
+    'Buyer',
+    'Buyer.templatetags',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +70,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            # 'libraries':{
+            #        'my_customer_tags':  'Buyer.templatetags.set_goods',
+            # }
         },
     },
 ]
@@ -162,3 +167,5 @@ CELERYBEAT_SCHEDULE={
 
 CKEDITOR_UPLOAD_PATH='upload'
 CKEDITOR_IMAGE_BACKEND='pillow'
+
+PAZE_SIZE=2

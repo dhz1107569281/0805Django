@@ -15,10 +15,12 @@ urlpatterns = [
     path('add_goods/',add_goods),
     path('list_goods/',list_goods),
     re_path(r'set_statue/(?P<id>\d+)/',set_statue),
-    re_path(r'^goods/(?P<id>\d+)/',goods),
-    re_path(r'^update_goods/(?P<id>\d+)/',update_goods),
+    re_path(r'goods/(?P<id>\d+)/',goods),
+    re_path(r'update_goods/(?P<id>\d+)/',update_goods),
     re_path(r'Add_Update/(?P<id>\d*)',Add_Update),
-    # re_path(r'^Add_Update/',Add_Update),
+
+    path('Goods/',GoodsView.as_view()),
+    path('vue_list_goods/',vue_list_goods),
 ]
 urlpatterns +=[
     path('get_mail/',get_mail)

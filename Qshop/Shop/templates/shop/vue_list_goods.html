@@ -1,0 +1,137 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}
+vue
+{% endblock %}
+
+{% block style %}
+{#    https://cdn.jsdelivr.net/npm/vue/dist/vue.js#}
+<script src="/static/shop/vendor/jquery/jquery.min.js"></script>
+<script src="/static/shop/js/vue.min.js"></script>
+<script src="/static/shop/js/vue-resource.js"></script>
+
+{% endblock %}
+
+{% block pro %}
+<a class="btn btn-warning" href="/Shop/Add_Update/">添加商品</a>
+{% endblock %}
+
+{% block content %}
+    <div id="goodstable">
+    {% verbatim myblock %}
+   <div class="input-group">
+        <input type="text" id="keywords" class="form-control bg-light border-0 small" placeholder="商品搜索">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" v-on:click="get_keywords_data()">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+        </div>
+   </div>
+   <table class="table dataTable">
+        <tr>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>商品数量</th>
+            <th>出厂日期</th>
+            <th>保质期</th>
+            <th>操作</th>
+        </tr>
+        <tr v-for="g in goods_list">
+            <td>{{ g.name}}</td>
+            <td>{{ g.price }}</td>
+            <td>{{ g.number }}</td>
+            <td>{{ g.production }}</td>
+            <td>{{ g.safe_date }}</td>
+            <td>
+                <a class="btn btn-primary" style="color: white;">下架</a>
+            </td>
+        </tr>
+    </table>
+
+   <!--
+   <div class="dataTables_paginate paging_simple_numbers">
+        <ul class="pagination">
+            <li class="paginate_button page-item" v-for="'page in page_range">
+                <a class="page-link" v-on:click="get_page_data(page)">
+                    {{ page }}
+                </a>
+            </li>
+        </ul>
+    </div>
+    -->
+   {% endverbatim myblock %}
+    </div>
+{% endblock %}
+<!--
+<div id="goodstable">
+
+    <div class="input-group">
+        <input type="text" id="keywords" class="form-control bg-light border-0 small" placeholder="商品搜索">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" v-on:click="get_keywords_data()">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <table class="table dataTable">
+        <tr>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>商品数量</th>
+            <th>出厂日期</th>
+            <th>保质期</th>
+            <th>操作</th>
+        </tr>
+        <tr v-for="g in goods_list">
+            <td>{{ g.name}}</td>
+            <td>{{ g.price }}</td>
+            <td>{{ g.number }}</td>
+            <td>{{ g.production }}</td>
+            <td>{{ g.safe_date }}</td>
+            <td>
+                <a class="btn btn-primary" style="color: white;">下架</a>
+            </td>
+        </tr>
+    </table>
+    <div class="dataTables_paginate paging_simple_numbers">
+        <ul class="pagination">
+            <li class="paginate_button page-item" v-for="'page in page_range">
+                <a class="page-link" v-on:click="get_page_data(page)">
+                    {{ page }}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+-->
+
+{% block script %}
+    <script>
+    Vue.use(VueResource);
+     var vue = new Vue(
+         {
+             el: "#goodstable", //要绑定的对象
+             data: {
+                 "message": "hello world",
+                 "goods_list": []
+             },// 具体要绑定的数据
+               created: function () {
+                    this.$http.get("/Shop/Goods/").then(
+                        function (data) {
+                            console.log(data["data"]["data"]);
+                            this.goods_list = data["data"]["data"]
+                        },
+                        function (error) {
+                            console.log(error)
+                        }
+                    )
+                },// 初始化执行
+                methods: {
+
+                } //vue需要绑定的函数功能
+         });
+    </script>
+
+  {% endblock %}
