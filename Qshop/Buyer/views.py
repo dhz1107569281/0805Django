@@ -2,6 +2,7 @@ from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect,HttpRequest
 from Shop.models import GoodsType,Goods
 from User.models import User
+from Buyer.models import BuyCar
 from Shop.views import vaild_email,set_password
 # Create your views here.
 
@@ -33,7 +34,6 @@ def login(request):
             error='用户不存在'
     return render(request,'buyer/login.html',locals())
 
-
 def index(request):
     # message='hello world'
     # all_data = GoodsType.objects.all()
@@ -44,6 +44,7 @@ def index(request):
 
     return render(request,'buyer/index.html',locals())
 
+from django.core.paginator import Paginator
 def goods_list(request):
     email = request.COOKIES.get("email")
     id=request.GET.get("id")
@@ -51,9 +52,12 @@ def goods_list(request):
     if id:
         goods_type=GoodsType.objects.get(id=int(id))
         goodslist=goods_type.goods_set.all()
+        goods_obj=Paginator(goods_list,2)
+        # goods_data=goods_obj.page(int(1))
     return render(request,'buyer/goods_list.html',locals())
 
 def goods(request,id):
+    email = request.COOKIES.get("email")
     goodsdata=Goods.objects.get(id=int(id))
     return render(request,'buyer/goods.html',locals())
 
@@ -81,7 +85,8 @@ def login_valid(fun):
 
 @login_valid
 def cart(request):#方法二
-    return  render(request,'buyer/cart.html')
+    email = request.COOKIES.get("email")
+    return  render(request,'buyer/cart.html',locals())
 
 def register(request):
     if request.method=="POST":
@@ -119,3 +124,37 @@ def get_pay(request):
     order_price="340"
     url=pay(order_number,order_price)
     return HttpResponseRedirect(url)
+
+def user_center_info(request):
+    email=request.COOKIES.get("email")
+    user_info=User.objects.get(email=email)
+    return render(request,'buyer/user_center_info.html',locals())
+
+from django.http import JsonResponse
+def add_car(request):
+    result={
+        "statue":"error",
+        "data":""
+    }
+    if request.method=="POST":
+        user = request.COOKIES.get("email")
+        goods_id = request.POST.get("goods_id")
+        number = request.POST.get("number",1)
+
+        try:
+            goods=Goods.objects.get(id=goods_id)
+        except Exception as e:
+            result["data"]=str(e)
+        else:
+            car = BuyCar()
+            car.car_user=user
+            car.goods_name=goods.name
+            car.goods_picture=goods.picture
+            car.goods_price=goods.price
+            car.goods_number=number
+            car.goods_total=number*goods.price
+            car.goods_store=goods.goods_store_id
+            car.save()
+            result["statue"]="success"
+            result["data"]="加入购物车成功"
+        return JsonResponse(result)

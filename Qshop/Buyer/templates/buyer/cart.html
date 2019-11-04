@@ -4,9 +4,17 @@
 购物车
 {% endblock %}
 
+{% block login %}
+{% if email %}
+{{ email }}
+{% else %}
+登录
+{% endif %}
+{% endblock %}
+
 {% block content %}
 	<div class="search_bar clearfix">
-		<a href="index.html" class="logo fl"><img src="/static/buyer/images/logo.png"></a>
+		<a href="/Buyer/index/" class="logo fl"><img src="/static/buyer/images/logo.png"></a>
 		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;购物车</div>
 		<div class="search_con fr">
 			<input type="text" class="input_text fl" name="" placeholder="搜索商品">

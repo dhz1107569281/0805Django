@@ -4,6 +4,18 @@
 商品详情
 {% endblock %}
 
+{% block login %}
+{% if email %}
+{{ email }}
+{% else %}
+登录
+{% endif %}
+{% endblock %}
+
+{% block style %}
+<script src="/static/buyer/js/jquery-1.12.4.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="breadcrumb">
 		<a href="#">全部分类</a>
@@ -17,7 +29,7 @@
 <div class="goods_detail_con clearfix">
 
 
-		<div class="goods_detail_pic fl"><img style="width: 340px;height: 350px;" src="/static/shop/img/{{ goodsdata.picture }}"></div>
+		<div class="goods_detail_pic fl"><img style="width:100%;height: 100%;" src="/static/shop/img/{{ goodsdata.picture }}"></div>
 		<div class="goods_detail_list fr">
 			<h3>{{ goodsdata.name }}</h3>
 			<p>草莓浆果柔软多汁，味美爽口，适合速冻保鲜贮藏。草莓速冻后，可以保持原有的色、香、味，既便于贮藏，又便于外销。</p>
@@ -29,11 +41,11 @@
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
 					<input type="text" class="num_show fl" value="1">
-					<a href="javascript:;" class="add fr">+</a>
-					<a href="javascript:;" class="minus fr">-</a>
+					<a id="number" class="add fr" onclick="change_number('u')">+</a>
+					<a id="number" class="minus fr" onclick="change_number('d')">-</a>
 				</div>
 			</div>
-			<div class="total">总价：<em>16.80元</em></div>
+			<div class="total">总价：<em>{{ goodsdata.price }}元</em></div>
 			<div class="operate_btn">
 				<a href="/Buyer/place_order/" class="buy_btn">立即购买</a>
 				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
@@ -77,4 +89,37 @@
 
 		</div>
 	</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function change_number(t) {
+            var obj = $("#number");
+            var value = parseInt(obj.val());
+            var price= parseFloat($("#price").text());
+
+            if (t=='u'){
+                var value = value+1;
+            } else if (t=="d"){
+                var value = value-1;
+            }
+            var total = price*value;
+
+            $("#total").text(total+"元");
+            obj.val(value)
+        }
+        $("#number").blur(
+            function () {
+                var obj = $("#number");
+                var value = parseInt(obj.val());
+                var price = parseFloat($("#price").text());
+                if (value<1){
+                    value=1;
+                    obj.val(value);
+                }
+                var total = price*value;
+                $("#total").text(total+"元")
+            }
+        )
+    </script>
 {% endblock %}

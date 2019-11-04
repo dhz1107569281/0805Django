@@ -43,14 +43,14 @@
     {% for t in type_list %}
     <div class="list_model">
         <div class="list_title clearfix">
-            <h3 class="fl" id="model01">新鲜水果</h3>
+            <h3 class="fl" id="model01">{{ t.name }}</h3>
             <div class="subtitle fl">
                 <span>|</span>
-                <a href="#">鲜芒</a>
-                <a href="#">加州提子</a>
-                <a href="#">亚马逊牛油果</a>
+                <a href="#">{{ t.name }}</a>
+                <a href="#">{{ t.name }}</a>
+                <a href="#">{{ t.name }}</a>
             </div>
-            <a href="/Buyer/goods_list/" class="goods_more fr" id="fruit_more">查看更多 ></a>
+            <a href="/Buyer/goods_list/?id={{ t.id }}" class="goods_more fr" id="fruit_more">查看更多 ></a>
         </div>
 
         <div class="goods_con clearfix">
@@ -59,7 +59,7 @@
                 {% for goods in t|get_filter %}
                 <li>
                     <h4><a href="#">{{ goods.name }}</a></h4>
-                    <a href="#"><img src="/static/shop/img/{{ goods.picture }}"></a>
+                    <a href="/Buyer/goods/{{ goods.id }}"><img src="/static/shop/img/{{ goods.picture }}"></a>
                     <div class="prize">{{ goods.price }}</div>
                 </li>
                 {% endfor %}

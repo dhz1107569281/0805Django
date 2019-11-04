@@ -11,6 +11,11 @@
 登录
 {% endif %}
 {% endblock %}
+
+{% block style %}
+    <script src="/static/buyer/js/jquery-1.12.4.min.js"></script>
+{% endblock %}
+
 {% block content %}
 
 <div class="breadcrumb">
@@ -51,9 +56,9 @@
                 <a href="/Buyer/goods/{{ goods.id }}/"><img src="/static/shop/img/{{ goods.picture }}"></a>
                 <h4><a href="/Buyer/goods/{{ goods.id }}/">{{ goods.name }}</a></h4>
                 <div class="operate">
-                    <span class="prize">￥{{ goods.name }}</span>
-                    <span class="unit">{{ goods.name }}/500g</span>
-                    <a href="#" class="add_goods" title="加入购物车"></a>
+                    <span class="prize">￥{{ goods.price }}</span>
+                    <span class="unit">{{ goods.price }}/500g</span>
+                    <a id="{{ goods.id }}" class="add_goods" title="加入购物车" onclick="add_car(this.id)"></a>
                 </div>
             </li>
 
@@ -62,13 +67,35 @@
 
         <div class="pagenation">
             <a href="#">上一页</a>
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
+            <a href="#" class="active">1</a>/
+{#            {% for page in goods_obj %}#}
+{#            <a>{{ goods_obj }}</a>#}
+{#            {% endfor %}#}
             <a href="#">下一页></a>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function add_car(obj) {
+        var post_data={"goods_id":obj,"csrfmiddlewaretoken":"{{ csrf_token }}"};
+        console.log(post_data);
+        $.ajax(
+            {
+                url:"/Buyer/add_car/",
+                type:"post",
+                data:post_data,
+                success:function (data) {
+                    console.log(data["data"]);
+                    alert(data["data"])
+                },
+                error:function (error) {
+                    console.log(error)
+                }
+            }
+        )
+    }
+</script>
 {% endblock %}

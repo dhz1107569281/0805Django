@@ -8,10 +8,12 @@ urlpatterns = [
     path('cart/',cart),
     path('place_order/',place_order),
     path('get_pay/',get_pay),
+    path('add_car/',add_car),
 ]
 
 urlpatterns +=[
     path('login/',login),
     path('register/',register),
     path('logout/',logout),
+    path('user_center_info/',user_center_info),
 ]
